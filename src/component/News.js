@@ -22,13 +22,25 @@ function News(props) {
 
   document.title = "DailyNews - " + props.category.charAt(0).toUpperCase() + props.category.slice(1);
 
-  // const componentDidMount = () => {
-  //   updateNews();
-  // };
   useEffect(() => {
     updateNews();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    countryChangeEffect();
+    // eslint-disable-next-line
+  }, [props.country]);
+
+  const countryChangeEffect = async () => {
+    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${page}&pageSize=${props.pageSize}`;
+    let data = await fetch(url);
+    let parseData = await data.json();
+    setArticles(parseData.articles);
+    setTotalArticles(parseData.totalResults);
+    setLoading(false);
+  };
+
   const updateNews = async () => {
     const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${page}&pageSize=${props.pageSize}`;
     let data = await fetch(url);
@@ -40,9 +52,7 @@ function News(props) {
 
   const fetchMoreData = async () => {
     setPage(page + 1);
-    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${
-      page + 1
-    }&pageSize=${props.pageSize}`;
+    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${page + 1}&pageSize=${props.pageSize}`;
     setLoading(true);
     let data = await fetch(url);
     let parseData = await data.json();
@@ -54,16 +64,9 @@ function News(props) {
 
   return (
     <>
-      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>
-        {props.category.charAt(0).toUpperCase() + props.category.slice(1)} - Top Headlines on DailyNews
-      </h1>
+      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.category.charAt(0).toUpperCase() + props.category.slice(1)} - Top Headlines on DailyNews</h1>
       {loading && <Spinner />}
-      <InfiniteScroll
-        dataLength={articles.length}
-        next={fetchMoreData}
-        hasMore={articles.length !== totalArticles}
-        loader={articles.length <= totalArticles ? <Spinner /> : ""}
-      >
+      <InfiniteScroll dataLength={articles.length} next={fetchMoreData} hasMore={articles.length !== totalArticles} loader={articles.length <= totalArticles ? <Spinner /> : ""}>
         <div className="container">
           <div className="row">
             {articles.map((element, index) => {
