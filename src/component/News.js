@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {data} from '../rowdata';
+import { data } from "../rowdata";
 function News(props) {
   News.defaultProps = {
     country: "in",
@@ -14,13 +14,13 @@ function News(props) {
     country: PropTypes.string,
     pageSize: PropTypes.number,
     category: PropTypes.string,
-  };  
+  };
   // const [articles, setArticles] = useState(data.articles);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState();
-
+  const [sortItem, setSortItem] = useState("publishedAt");
 
   document.title = "DailyNews - " + props.category.charAt(0).toUpperCase() + props.category.slice(1);
 
@@ -34,12 +34,12 @@ function News(props) {
     countryChangeEffect();
     // eslint-disable-next-line
   }, [props.country]);
-  
+
   useEffect(() => {
     setPage(1);
     searchResult();
     // eslint-disable-next-line
-  }, [props.search]);
+  }, [props.search, sortItem]);
 
   const countryChangeEffect = async () => {
     const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${page}&pageSize=${props.pageSize}`;
@@ -61,14 +61,14 @@ function News(props) {
 
   const fetchMoreData = async () => {
     let url;
-    const newPage = page+1;
+    const newPage = page + 1;
     setPage(newPage);
 
     setLoading(true);
-    if(props.search){
-       url = `https://newsapi.org/v2/everything?q=${props.search}&apiKey=${props.apikey}&page=${newPage}`;
-    }else{
-       url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${newPage}&pageSize=${props.pageSize}`;
+    if (props.search) {
+      url = `https://newsapi.org/v2/everything?q=${props.search}&apiKey=${props.apikey}&page=${newPage}`;
+    } else {
+      url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${newPage}&pageSize=${props.pageSize}`;
     }
     let data = await fetch(url);
     let parseData = await data.json();
@@ -78,18 +78,23 @@ function News(props) {
     setLoading(false);
   };
 
-const searchResult = async()=>{
-  setLoading(true);
-const url = `https://newsapi.org/v2/everything?q=${props.search}&apiKey=${props.apikey}`
-let data = await fetch(url);
-let parseData = await data.json();
-setArticles(parseData.articles);
-setTotalArticles(parseData.totalResults);
-setLoading(false);
-}
+  const searchResult = async () => {
+    setLoading(true);
+    const url = `https://newsapi.org/v2/everything?q=${props.search}&sortBy=${sortItem}&apiKey=${props.apikey}`;
+    let data = await fetch(url);
+    let parseData = await data.json();
+    setArticles(parseData.articles);
+    setTotalArticles(parseData.totalResults);
+    setLoading(false);
+  };
   return (
     <>
-<h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{ props.search ? "Searched articles for "+ props.search : props.category.charAt(0).toUpperCase() + props.category.slice(1) +"- Top Headlines On DailyNews"}</h1>
+      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.search ? "Searched articles for " + props.search : props.category.charAt(0).toUpperCase() + props.category.slice(1) + "- Top Headlines On DailyNews"}</h1>
+      {props.search &&<div className="text-center">
+  <button onClick={()=>setSortItem('publishedAt')} className="btn btn-sm btn-secondary mx-1">publishedAt</button>
+  <button onClick={()=>setSortItem('popularity')} className="btn btn-sm btn-success mx-1">popularity</button>
+  <button onClick={()=>setSortItem('relevancy')} className="btn btn-sm btn-danger mx-1">relevancy</button> 
+</div>}
       {loading && <Spinner />}
       <InfiniteScroll dataLength={articles.length} next={fetchMoreData} hasMore={articles.length < totalArticles} loader={articles.length < totalArticles ? <Spinner /> : ""}>
         <div className="container">
@@ -97,15 +102,7 @@ setLoading(false);
             {articles.map((element, index) => {
               return (
                 <div className="col-md-4" key={index}>
-                  <NewsItem
-                    title={element.title ? element.title : ""}
-                    description={element.description ? element.description : ""}
-                    imageUrl={element.urlToImage}
-                    newsUrl={element.url}
-                    author={element.author}
-                    date={element.publishedAt}
-                    source={element.source.name}
-                  />
+                  <NewsItem title={element.title ? element.title : ""} description={element.description ? element.description : ""} imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} />
                 </div>
               );
             })}
