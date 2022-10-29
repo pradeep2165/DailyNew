@@ -34,6 +34,12 @@ function News(props) {
     countryChangeEffect();
     // eslint-disable-next-line
   }, [props.country]);
+  
+  useEffect(() => {
+    setPage(1);
+    searchResult();
+    // eslint-disable-next-line
+  }, [props.search]);
 
   const countryChangeEffect = async () => {
     const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${page}&pageSize=${props.pageSize}`;
@@ -54,10 +60,16 @@ function News(props) {
   };
 
   const fetchMoreData = async () => {
+    let url;
     const newPage = page+1;
     setPage(newPage);
-    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${newPage}&pageSize=${props.pageSize}`;
+
     setLoading(true);
+    if(props.search){
+       url = `https://newsapi.org/v2/everything?q=${props.search}&apiKey=${props.apikey}&page=${newPage}`;
+    }else{
+       url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${newPage}&pageSize=${props.pageSize}`;
+    }
     let data = await fetch(url);
     let parseData = await data.json();
 
@@ -65,10 +77,19 @@ function News(props) {
     setTotalArticles(parseData.totalResults);
     setLoading(false);
   };
-console.log(articles, totalArticles);
+
+const searchResult = async()=>{
+  setLoading(true);
+const url = `https://newsapi.org/v2/everything?q=${props.search}&apiKey=${props.apikey}`
+let data = await fetch(url);
+let parseData = await data.json();
+setArticles(parseData.articles);
+setTotalArticles(parseData.totalResults);
+setLoading(false);
+}
   return (
     <>
-      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.category.charAt(0).toUpperCase() + props.category.slice(1)} - Top Headlines On DailyNews</h1>
+<h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{ props.search ? "Searched articles for "+ props.search : props.category.charAt(0).toUpperCase() + props.category.slice(1) +"- Top Headlines On DailyNews"}</h1>
       {loading && <Spinner />}
       <InfiniteScroll dataLength={articles.length} next={fetchMoreData} hasMore={articles.length < totalArticles} loader={articles.length < totalArticles ? <Spinner /> : ""}>
         <div className="container">

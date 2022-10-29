@@ -7,7 +7,7 @@ import { useState } from "react";
 
 function App() {
   const apikey = process.env.REACT_APP_NEWS_API;
-  // const country = "in";
+  const [search, setSearch] = useState("");
   const [country, setCountry] = useState("in");
 
   function countryChange(e) {
@@ -16,7 +16,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar changeContry={countryChange} country={country} />
+      <Navbar changeContry={countryChange} country={country} setSearch={setSearch}/>
       <Routes>
         <Route exact path="/" element={<News apikey={apikey} key="general" country={country} category="general" />} />
         <Route exact path="/home" element={<News apikey={apikey} key="general" country={country} category="general" />} />
@@ -27,6 +27,7 @@ function App() {
         <Route exact path="/science" element={<News apikey={apikey} key="science" category="science" country={country} />} />
         <Route exact path="/sports" element={<News apikey={apikey} key="sports" category="sports" country={country} />} />
         <Route exact path="/technology" element={<News apikey={apikey} key="technology" category="technology" country={country} />} />
+        <Route exact path="/search" element={search ? <News apikey={apikey} key="search" search={search}/>: <News apikey={apikey} key="general" country={country} category="general" />}  />
       </Routes>
     </BrowserRouter>
   );

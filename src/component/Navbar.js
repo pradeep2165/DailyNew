@@ -1,8 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { countryName, countryObject } from "./CountryName";
+
 const Navbar = (props) => {
-  
+const links = ["Home", "Business", "Entertainment", "General", "Health", "Science", "Sports", "Technology"];  
+const navigate = useNavigate();
+const [search, setSearch] = useState('');
+const searchHandler=(e)=>{
+  e.preventDefault();
+  props.setSearch(search);
+  navigate("/search");
+}
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -15,46 +24,14 @@ const Navbar = (props) => {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link className="nav-link " aria-current="page" to="/home">
-                  Home
+              {links.map((link)=>(
+                <li className="nav-item" key={link}>
+                <Link className="nav-link " aria-current="page" to={`/${link.toLowerCase()}`}>
+                  {link}
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link " aria-current="page" to="/business">
-                  Business
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link " aria-current="page" to="/entertainment">
-                  Entertainment
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link " aria-current="page" to="/general">
-                  General
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" aria-current="page" to="/health">
-                  Health
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" aria-current="page" to="/science">
-                  Science
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" aria-current="page" to="/sports">
-                  Sports
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" aria-current="page" to="/technology">
-                  Technology
-                </Link>
-              </li>
+              ))}             
+              
             </ul>
             <ul className="navbar-nav me-right mb-2 mb-lg-0">
               <li className="nav-item dropdown">
@@ -70,37 +47,13 @@ const Navbar = (props) => {
                     </button>
                   </li>
                   ))}
-                  {/* <li>
-                    <button className="dropdown-item" onClick={() => props.changeContry("in")}>
-                      India
-                    </button>
-                  </li>
-                  <li>
-                    <button className="dropdown-item" onClick={() => props.changeContry("ch")}>
-                      Switzerland
-                    </button>
-                  </li>
-                  <li>
-                    <button className="dropdown-item" onClick={() => props.changeContry("ae")}>
-                    United Arab Emirates
-                    </button>
-                  </li>
-                  <li>
-                    <button className="dropdown-item" onClick={() => props.changeContry("ar")}>
-                    ar
-                    </button>
-                  </li>
-                  <li>
-                    <button className="dropdown-item" onClick={() => props.changeContry("ar")}>
-                    ar
-                    </button>
-                  </li> */}
+
                 </ul>
               </li>
             </ul>
 
-            <form className="d-flex" role="search">
-              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+            <form className="d-flex" role="search" onSubmit={searchHandler}>
+              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" onChange={(e)=>setSearch(e.target.value)}/>
               <button className="btn btn-outline-success" type="submit">
                 Search
               </button>
