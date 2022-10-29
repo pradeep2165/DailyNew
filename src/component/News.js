@@ -19,6 +19,11 @@ function News(props) {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
+  const countryName={
+    'in':"India",
+    'us': "USA",
+    'ch':"Switzerland"
+  }
 
   document.title = "DailyNews - " + props.category.charAt(0).toUpperCase() + props.category.slice(1);
 
@@ -28,6 +33,7 @@ function News(props) {
   }, []);
 
   useEffect(() => {
+    setPage(1);
     countryChangeEffect();
     // eslint-disable-next-line
   }, [props.country]);
@@ -51,8 +57,9 @@ function News(props) {
   };
 
   const fetchMoreData = async () => {
-    setPage(page + 1);
-    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${page + 1}&pageSize=${props.pageSize}`;
+    const newPage = page+1;
+    setPage(newPage);
+    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apikey}&page=${newPage}&pageSize=${props.pageSize}`;
     setLoading(true);
     let data = await fetch(url);
     let parseData = await data.json();
@@ -61,12 +68,12 @@ function News(props) {
     setTotalArticles(parseData.totalResults);
     setLoading(false);
   };
-
+console.log(articles, totalArticles);
   return (
     <>
-      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.category.charAt(0).toUpperCase() + props.category.slice(1)} - Top Headlines on DailyNews</h1>
+      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.category.charAt(0).toUpperCase() + props.category.slice(1)} - Top Headlines in {countryName[props.country]} on DailyNews</h1>
       {loading && <Spinner />}
-      <InfiniteScroll dataLength={articles.length} next={fetchMoreData} hasMore={articles.length !== totalArticles} loader={articles.length <= totalArticles ? <Spinner /> : ""}>
+      <InfiniteScroll dataLength={articles.length} next={fetchMoreData} hasMore={articles.length < totalArticles} loader={articles.length < totalArticles ? <Spinner /> : ""}>
         <div className="container">
           <div className="row">
             {articles.map((element, index) => {
