@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { countryName, countryObject } from "./CountryName";
 const Navbar = (props) => {
+  
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -58,15 +59,18 @@ const Navbar = (props) => {
             <ul className="navbar-nav me-right mb-2 mb-lg-0">
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Choose Country
+                  {countryObject[props.country]}
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li>
-                    <button className="dropdown-item" onClick={() => props.changeContry("us")}>
-                      Usa
+
+                  {countryName.map((x)=>(
+                  <li key={x.countryName}>
+                    <button className="dropdown-item" onClick={() => props.changeContry(x.countrySortName)}>
+                      {x.countryName}
                     </button>
                   </li>
-                  <li>
+                  ))}
+                  {/* <li>
                     <button className="dropdown-item" onClick={() => props.changeContry("in")}>
                       India
                     </button>
@@ -76,6 +80,21 @@ const Navbar = (props) => {
                       Switzerland
                     </button>
                   </li>
+                  <li>
+                    <button className="dropdown-item" onClick={() => props.changeContry("ae")}>
+                    United Arab Emirates
+                    </button>
+                  </li>
+                  <li>
+                    <button className="dropdown-item" onClick={() => props.changeContry("ar")}>
+                    ar
+                    </button>
+                  </li>
+                  <li>
+                    <button className="dropdown-item" onClick={() => props.changeContry("ar")}>
+                    ar
+                    </button>
+                  </li> */}
                 </ul>
               </li>
             </ul>

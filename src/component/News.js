@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
-
+import {data} from '../rowdata';
 function News(props) {
   News.defaultProps = {
     country: "in",
@@ -14,16 +14,13 @@ function News(props) {
     country: PropTypes.string,
     pageSize: PropTypes.number,
     category: PropTypes.string,
-  };
+  };  
+  // const [articles, setArticles] = useState(data.articles);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [totalArticles, setTotalArticles] = useState(0);
-  const countryName={
-    'in':"India",
-    'us': "USA",
-    'ch':"Switzerland"
-  }
+  const [totalArticles, setTotalArticles] = useState();
+
 
   document.title = "DailyNews - " + props.category.charAt(0).toUpperCase() + props.category.slice(1);
 
@@ -71,7 +68,7 @@ function News(props) {
 console.log(articles, totalArticles);
   return (
     <>
-      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.category.charAt(0).toUpperCase() + props.category.slice(1)} - Top Headlines in {countryName[props.country]} on DailyNews</h1>
+      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.category.charAt(0).toUpperCase() + props.category.slice(1)} - Top Headlines On DailyNews</h1>
       {loading && <Spinner />}
       <InfiniteScroll dataLength={articles.length} next={fetchMoreData} hasMore={articles.length < totalArticles} loader={articles.length < totalArticles ? <Spinner /> : ""}>
         <div className="container">
