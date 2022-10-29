@@ -28,6 +28,7 @@ function News(props) {
   const [source_name, setSource_name] = useState("");
 
   document.title = "DailyNews - " + props.category.charAt(0).toUpperCase() + props.category.slice(1);
+  document.body.style.backgroundColor=(props.darkMode ? "black" : "#224cb3")
 
   useEffect(() => {
     updateNews();
@@ -113,9 +114,10 @@ function News(props) {
     setTotalArticles(parseData.totalResults);
     setLoading(false);
   };
+
   return (
     <>
-      <h1 style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.search ? "Articles for " + props.search : source_name ? "Articles for " + source_name : props.category.charAt(0).toUpperCase() + props.category.slice(1) + "- Top Headlines On DailyNews"}</h1>
+      <h1 className={`${props.darkMode ? "text-light" : "text-dark"}`} style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.search ? "Articles for " + props.search : source_name ? "Articles for " + source_name : props.category.charAt(0).toUpperCase() + props.category.slice(1) + "- Top Headlines On DailyNews"}</h1>
       <div className="d-flex justify-content-center position-relative"><button  onClick={()=>setShowSource(x=>!x)} className="btn btn-sm btn-outline-danger">{showSource? "Hide source":"Search New By Sources"} <SiSonarsource fontSize={30} /></button></div>
       {props.search && (
         <div className="text-center">
@@ -140,7 +142,7 @@ function News(props) {
             {articles.map((element, index) => {
               return (
                 <div className="col-md-4" key={index}>
-                  <NewsItem title={element.title ? element.title : ""} description={element.description ? element.description : ""} imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} />
+                  <NewsItem title={element.title ? element.title : ""} description={element.description ? element.description : ""} imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} darkMode={props.darkMode}/>
                 </div>
               );
             })}
