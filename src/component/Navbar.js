@@ -42,7 +42,7 @@ const searchHandler=(e)=>{
                 <a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   {countryObject[props.country]}
                 </a>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                <ul className="dropdown-menu overflow-auto" style={{height: "200px"}} aria-labelledby="navbarDropdown">
 
                   {countryName.map((x)=>(
                   <li key={x.countryName}>
