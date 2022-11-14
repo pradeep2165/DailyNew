@@ -1,5 +1,6 @@
 import React from "react";
 import moment from "moment";
+import {BsClockHistory} from 'react-icons/bs'
 const NewsItem = (props) => {
   let { title, description, imageUrl, newsUrl, author, date, source } = props;
 
@@ -19,10 +20,10 @@ const NewsItem = (props) => {
           </div>
           <div className="card-body">
             <p>
-              <small className={` ${props.darkMode ? "text-light" : "text-dark"}`}> {author ? author : ""} {moment(date).fromNow()}</small> 
+              <small className={` ${props.darkMode ? "text-light" : "text-dark"}`}> {author ? (author.slice(0, 30) +"..."+ " |") : ""} <BsClockHistory/>{"  "}{moment(date).fromNow()} </small> 
             </p>
-            <a href={newsUrl} target="_blank" rel="noreferrer" className="btn btn-sm btn-dark">
-              Read More
+            <a href={newsUrl} target="_blank" rel="noreferrer" className={`btn btn-sm ${props.darkMode ? "btn-outline-light" : "btn-outline-dark"}`}>
+              Read More...
             </a>
           </div>
         </div>

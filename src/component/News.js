@@ -117,10 +117,10 @@ function News(props) {
 
   return (
     <>
-      <h1 className={`${props.darkMode ? "text-light" : "text-dark"}`} style={{ marginTop: "100px", marginBottom: "50px", textAlign: "center" }}>{props.search ? "Articles for " + props.search : source_name ? "Articles for " + source_name : props.category.charAt(0).toUpperCase() + props.category.slice(1) + "- Top Headlines On DailyNews"}</h1>
-      <div className="d-flex justify-content-center position-relative"><button  onClick={()=>setShowSource(x=>!x)} className="btn btn-sm btn-outline-danger">{showSource? "Hide source":"Search New By Sources"} <SiSonarsource fontSize={30} /></button></div>
+      <h1 className={`${props.darkMode ? "text-light" : "text-light"}`} style={{ marginTop: "70px", marginBottom: "20px", textAlign: "center" }}>{props.search ? "Articles for " + props.search : source_name ? "Articles for " + source_name : props.category.charAt(0).toUpperCase() + props.category.slice(1) + "- Top Headlines"}</h1>
+      <div className="d-flex justify-content-center position-relative"><button  onClick={()=>setShowSource(x=>!x)} className="btn btn-sm btn-outline-light">{showSource? "Hide source":"Search New By Sources"} <SiSonarsource fontSize={30} /></button></div>
       {props.search && (
-        <div className="text-center">
+        <div className="text-center my-4">
           <button onClick={() => setSortItem("publishedAt")} className="btn btn-sm btn-secondary mx-1">
             publishedAt
           </button>
